@@ -97,7 +97,10 @@ R version 3.6.1 and R packages:
   - ggthemes==4.2.0
   - docopt==0.7.1
   - rmarkdown==2.5
-    
+
+### Dependency Diagram of Makefile
+
+[Makefile Dependency.png](https://raw.githubusercontent.com/UBC-MDS/DSCI_522_Group_10/main/Makefile.png)
   
 ## License
 The Post Campaign Bank Term Deposit Subscription Predictor materials here are licensed under the Creative Commons Attribution 2.5 Canada License (CC BY 2.5 CA). If re-using/re-mixing please provide attribution and link to this webpage.
