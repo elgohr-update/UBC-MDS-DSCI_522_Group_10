@@ -17,14 +17,41 @@ The report can be found [here](https://htmlpreview.github.io/?https://raw.github
 
 ## Usage
 
+There are two suggested ways to run this analysis:
+
+### 1. Using Docker
+
+Note - the instructions in this section also depends on running this in a unix shell (e.g., terminal or Git Bash)
+
+To replicate the analysis, install [Docker](https://www.docker.com/get-started). Then clone this GitHub repository and run the following command at the command line/terminal from the root directory of this project:
+
+```
+docker run --rm -v /$(pwd):/home/rstudio/bank_tele_campaign_analysis jufu/ubcmds_522_group10_bank:v0.3.0 make -C /home/rstudio/bank_tele_campaign_analysis all
+```
+
+To reset the repo to a clean slate with no intermediate and result files, run the following command from the root directory of this project:
+```
+docker run --rm -v /$(pwd):/home/rstudio/bank_tele_campaign_analysis jufu/ubcmds_522_group10_bank:v0.3.0 make -C /home/rstudio/bank_tele_campaign_analysis clean
+```
+
+### 2. Without using Docker
+
 To replicate the analysis, clone this GitHub repository, install the [dependencies](#dependencies) listed below, and run the following commands at the command line/terminal from the root directory of this project:
 
 ```
-#activate our conda environment
+#Activate the Conda environment first
 conda activate bank
 
 make all
+
 ```
+
+To reset the repo to a clean slate with no intermediate and result files, run the following command from the root directory of this project:
+
+```
+make clean
+```
+
 
 ## Dependencies
 
