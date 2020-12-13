@@ -1,3 +1,8 @@
+# Docker image for DSCI522 Group 10's bank telemarketing campaign data analysis project
+#
+# This Dockerfile will be available on DockerHub at jufu/ubcmds_522_group10_bank
+#
+
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 ARG BASE_CONTAINER=jupyter/scipy-notebook
@@ -39,6 +44,7 @@ RUN conda install --quiet --yes \
 RUN conda install -y -c conda-forge \
     'altair=4.1.*' \
     'altair_saver=0.5.*' \
+    'pandas=1.1.5' \
     'docopt=0.6.*' && \
     conda clean --all -f -y && \
     fix-permissions "${CONDA_DIR}" && \
