@@ -17,6 +17,7 @@ Example:
 """
 
 import pandas as pd
+import os.path
 import altair as alt
 from docopt import docopt
 from altair_saver import save
@@ -48,8 +49,8 @@ def main(opt):
     """
 
     train_df = pd.read_csv(opt["--data_path"])
-    train_df.loc[train_df.target == 0, "target"] = "Not Purchased"
-    train_df.loc[train_df.target == 1, "target"] = "Purchased"
+    train_df.loc[train_df.target == 0, "target"] = "Not Subscribed"
+    train_df.loc[train_df.target == 1, "target"] = "Subscribed"
 
     feature_option = opt["--feature"]
 
@@ -81,15 +82,47 @@ def main(opt):
 
     if feature_option in numeric_features:
         create_numeric_plots(train_df, [feature_option])
+
+        # test the function create_numeric_plots
+        if os.path.isfile(str(opt["--image_path"]) + feature_option + ".png"):
+            print(
+                "Visualizations for numeric variables have been created in the declared path"
+            )
+        else:
+            print("Something went wrong!")
     elif feature_option in categorical_features:
         create_categorical_plots(train_df, [feature_option])
+
+        # test the function create_numeric_plots
+        if os.path.isfile(str(opt["--image_path"]) + feature_option + ".png"):
+            print(
+                "Visualizations for categorical variables have been created in the declared path"
+            )
+        else:
+            print("Something went wrong!")
     elif feature_option is None:
         create_numeric_plots(train_df, numeric_features)
         create_categorical_plots(train_df, categorical_features)
 
+        # test the function create_numeric_plots
+        if os.path.isfile(str(opt["--image_path"]) + categorical_features[0] + ".png"):
+            print(
+                "Visualizations for numeric variables have been created in the declared path"
+            )
+        else:
+            print("Something went wrong!")
+
+        # test the function create_numeric_plots
+        if os.path.isfile(str(opt["--image_path"]) + numeric_features[0] + ".png"):
+            print(
+                "Visualizations for categorical variables have been created in the declared path"
+            )
+        else:
+            print("Something went wrong!")
+
 
 def create_categorical_plots(train_df, categorical_features):
-    """Creates percent purchased plots given a dataframe and a list of categorical feature/s
+    """Creates percent Subscribed plots given a dataframe and a list of categorical feature/s
     and saves it in the specified folder.
 
     Parameters
@@ -97,7 +130,7 @@ def create_categorical_plots(train_df, categorical_features):
     train_df : DataFrame
         Dataframe containing the training split of the Bank Additional Full dataset
     categorical_features : list
-        A list containing the categorical feature/s of which to create percent purchased plots
+        A list containing the categorical feature/s of which to create percent Subscribed plots
 
     Example
     ----------
@@ -140,7 +173,7 @@ def create_categorical_plots(train_df, categorical_features):
     for feature in categorical_features:
         name = feature.replace("_", " ").title()
         counts_y = train_df.groupby(by=[feature, "target"])["target"].count()
-        percent_purchased = (
+        percent_subscribed = (
             pd.DataFrame(counts_y)
             .rename(columns={"target": "count"})
             .reset_index()
@@ -148,14 +181,14 @@ def create_categorical_plots(train_df, categorical_features):
             .reset_index()
         )
 
-        percent_purchased = percent_purchased.assign(
-            percent_purchased=round(
+        percent_subscribed = percent_subscribed.assign(
+            percent_subscribed=round(
                 100
                 * (
-                    percent_purchased["Purchased"]
+                    percent_subscribed["Subscribed"]
                     / (
-                        percent_purchased["Not Purchased"]
-                        + percent_purchased["Purchased"]
+                        percent_subscribed["Not Subscribed"]
+                        + percent_subscribed["Subscribed"]
                     )
                 ),
                 2,
@@ -166,15 +199,15 @@ def create_categorical_plots(train_df, categorical_features):
         else:
             sort = "x"
 
-        percent_purchased.sort_values("percent_purchased", inplace=True)
+        percent_subscribed.sort_values("percent_subscribed", inplace=True)
         plot = (
-            alt.Chart(percent_purchased)
+            alt.Chart(percent_subscribed)
             .mark_bar()
             .encode(
                 x=alt.X(
-                    "percent_purchased:Q",
+                    "percent_subscribed:Q",
                     scale=alt.Scale(domain=(0, 100)),
-                    title="Percent Purchased",
+                    title="Percent Subscribed",
                     axis=alt.Axis(grid=False),
                 ),
                 y=alt.Y(feature, sort=sort, title=name),
@@ -183,10 +216,6 @@ def create_categorical_plots(train_df, categorical_features):
         path = str(opt["--image_path"]) + feature + ".png"
         plot.save(path)
         print(name + " plot was created and saved")
-
-    print(
-        "Visualizations for categorical variables have been created in the declared path"
-    )
 
 
 def create_numeric_plots(train_df, numeric_features):
@@ -220,8 +249,6 @@ def create_numeric_plots(train_df, numeric_features):
         path = str(opt["--image_path"]) + feature + ".png"
         plot.save(path)
         print(name + " plot was created and saved")
-
-    print("Visualizations for numeric variables have been created in the declared path")
 
 
 if __name__ == "__main__":
